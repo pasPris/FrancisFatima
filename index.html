@@ -216,6 +216,90 @@
         }
 
         /* Photo Upload Section */
+		.progress-area {
+            margin-top: 30px;
+        }
+        
+        .progress-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            width: 100%;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            transition: width 0.3s ease;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+            list-style-type: none;
+        }
+        
+        .file-list li {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .file-icon {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .file-status {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .status-complete {
+            color: #2ecc71;
+        }
+        
+        .status-error {
+            color: #e74c3c;
+        }
+        
+        .uploaded-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .link-box {
+            background: #f1f3f4;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .link-box a {
+            color: #3498db;
+            word-break: break-all;
+        }
+		
         .upload-section {
             background: white;
             padding: 2rem;
@@ -381,7 +465,7 @@
 
         <section id="photos" class="upload-section">
             <h2><i class="fas fa-camera"></i> Téléchargement de photos</h2>
-            <p>Partagez vos photos de notre mariage avec nous via ImgBB</p>
+            <p>Partagez vos photos de notre mariage avec nous.</p>
             
             <div class="upload-area" id="dropZone">
                 <div class="upload-icon">
@@ -389,12 +473,24 @@
                 </div>
                 <h3>Faites glisser et déposez vos photos ici</h3>
                 <p>ou</p>
-                <button class="upload-btn">Sélectionner des fichiers</button>
+                <button class="upload-btn">Sélectionner des photos</button>
                 <input type="file" id="fileInput" style="display: none;" multiple accept="image/*">
             </div>
+			
+			<div class="progress-area">
+				<h3 class="progress-title">Progression du téléversement</h3>
+				<ul class="file-list" id="fileList"></ul>
+				
+				<img id="uploadedImage" class="uploaded-image" alt="Image téléversée">
+				
+				<div id="linkBox" class="link-box">
+					<strong> URL de l'image:</strong><br>
+					<a id="imageLink" target="_blank"></a>
+				</div>
+			</div>
             
             <div class="upload-info">
-                <p><i class="fas fa-info-circle"></i> Les photos seront téléchargées sur ImgBB et disponibles pour tous les invités.</p>
+                <p><i class="fas fa-info-circle"></i> Les photos seront téléchargées et disponibles pour les mariés.</p>
             </div>
         </section>
 
@@ -475,6 +571,10 @@
         const uploadBtn = document.querySelector('.upload-btn');
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-links');
+		
+        const fileList = document.getElementById('fileList');
+		const uploadedImage = document.getElementById('uploadedImage');
+        const imageLink = document.getElementById('imageLink');
 
         // Initialize the page
         function init() {
@@ -595,7 +695,7 @@
 			
         function handleFiles(files) {
             if (files.length > 0) {
-                alert(`Merci de partager avec nous ${files.length} photo(s)!.`);
+                alert(`Merci de partager avec nous ces ${files.length} photo(s)!.`);
 		
 				for (let i = 0; i < files.length; i++) {
                     const file = files[i];
@@ -605,9 +705,23 @@
                         continue;
                     }
 					
+					// Ajoute le fichier à la liste
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <div class="file-info">
+                            <span class="file-icon">🖼️</span>
+                            <span>${file.name}</span>
+                        </div>
+                        <span class="file-status">En attente...</span>
+                    `;
+                    fileList.appendChild(listItem);
+					
 					const formData = new FormData();
 					formData.append('image', file);
-                
+					
+					const statusElement = listItem.querySelector('.file-status');
+					statusElement.textContent = 'Téléversement...';
+				
 					// Using a proxy to avoid CORS issues in this example
 					// In production, you would make the request directly to ImgBB
 					fetch('https://api.imgbb.com/1/upload?key=' + API_KEY, {
@@ -617,13 +731,24 @@
 					.then(response => response.json())
 					.then(data => {
 						if (data.success) {
-							// what to do here??
+							statusElement.textContent = 'Téléversement réussi';
+							statusElement.classList.add('status-complete');
+							
+							// Show the uploaded image
+							uploadedImage.src = data.data.url;
+							uploadedImage.style.display = 'block';
+							
+							// Show the link
+							imageLink.href = data.data.url;
+							imageLink.textContent = data.data.url;
+							linkBox.style.display = 'block';
 						} else {
 							throw new Error(data.error.message || 'Téléversement échoué!');
 						}
 					})
 					.catch(error => {
-						alert('Erreur: ' + error.message);
+						statusElement.textContent = 'Error: ' + error.message;
+						statusElement.classList.add('status-error');
 					});
 				}
             }
