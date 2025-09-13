@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My PWA Site</title>
-    <meta name="description" content="A responsive Progressive Web App example">
-    <meta name="theme-color" content="#2F3BA2"/>
+    <title>Mariage de Francis & Fatima</title>
+    <meta name="description" content="Soyez la bienvenue à notre mariage!">
+    <meta name="theme-color" content="#FF6B6B"/>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2F3BA2;
-            --secondary: #FF6B6B;
-            --dark: #333;
-            --light: #f9f9f9;
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #1A1A2E;
+            --light: #F7F7F7;
             --gray: #777;
-            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
         }
 
         * {
@@ -27,13 +28,22 @@
         }
 
         body {
-            background-color: var(--light);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: var(--dark);
             line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 60px;
         }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
         header {
-            background-color: var(--primary);
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             padding: 1rem;
             position: sticky;
@@ -46,8 +56,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
         .logo {
@@ -67,11 +75,13 @@
         .nav-links a {
             color: white;
             text-decoration: none;
-            transition: opacity 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: background 0.3s;
         }
 
-        .nav-links a:hover {
-            opacity: 0.8;
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .hamburger {
@@ -83,98 +93,189 @@
             cursor: pointer;
         }
 
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+        /* Marquee Banner */
+        .marquee-container {
+            background: linear-gradient(to right, var(--accent), #FFA36B);
+            padding: 15px 0;
+            overflow: hidden;
+            margin: 20px 0;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
 
-        .hero {
+        .marquee {
+            font-size: 2rem;
+            font-weight: bold;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+            color: var(--dark);
+            padding: 10px 0;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Profile Section */
+        .profile {
             text-align: center;
-            padding: 3rem 1rem;
-            background: linear-gradient(135deg, var(--primary), #5465d4);
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 2rem;
+            margin: 2rem 0;
         }
 
-        .hero h1 {
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--secondary);
+            box-shadow: var(--shadow);
+        }
+
+        .profile h1 {
+            margin-top: 1rem;
+            color: var(--dark);
             font-size: 2.5rem;
-            margin-bottom: 1rem;
         }
 
-        .hero p {
+        .profile p {
+            color: var(--gray);
             font-size: 1.2rem;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .cta-button {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 1.5rem;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .feature-card {
+        /* Table Section */
+        .table-section {
             background: white;
             padding: 2rem;
-            border-radius: 10px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-
-        footer {
-            background-color: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem;
-            margin-top: 3rem;
-        }
-
-        .install-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            margin-top: 1rem;
-            cursor: pointer;
+            margin: 2rem 0;
             display: none;
         }
 
+        .table-section.active {
+            display: block;
+        }
+
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .search-box {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            width: 250px;
+        }
+
+        .sort-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sort-btn {
+            padding: 10px 15px;
+            background: var(--light);
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sort-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .guest-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .guest-table th, .guest-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .guest-table th {
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+
+        .guest-table tr:hover {
+            background-color: rgba(78, 205, 196, 0.1);
+        }
+
+        /* Photo Upload Section */
+        .upload-section {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .upload-section.active {
+            display: block;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--secondary);
+            border-radius: var(--radius);
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            transition: all 0.3s;
+            background: rgba(78, 205, 196, 0.05);
+        }
+
+        .upload-area.dragover {
+            background: rgba(78, 205, 196, 0.2);
+            border-color: var(--primary);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--gray);
+        }
+
+        /* Responsive Styles */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -196,64 +297,312 @@
                 display: block;
             }
 
-            .hero h1 {
+            .marquee {
+                font-size: 1.5rem;
+            }
+
+            .profile-img {
+                width: 150px;
+                height: 150px;
+            }
+
+            .profile h1 {
                 font-size: 2rem;
             }
 
-            .hero p {
-                font-size: 1rem;
+            .table-controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .upload-area {
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                <span>🚀</span> My PWA
-            </div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <button class="hamburger">☰</button>
-        </nav>
-    </header>
+    <div class="container">
+        <header>
+            <nav>
+                <div class="logo">
+                    <i class="fa-solid fa-champagne-glasses"></i> Notre mariage
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link active" data-target="home">Accueil</a></li>
+                    <li><a href="#" class="nav-link" data-target="tables">Tables</a></li>
+                    <li><a href="#" class="nav-link" data-target="photos">Photos</a></li>
+                </ul>
+                <button class="hamburger">☰</button>
+            </nav>
+        </header>
 
-    <main>
-        <section class="hero" id="home">
-            <h1>Welcome to My Responsive PWA</h1>
-            <p>A Progressive Web App that works on all devices and can be installed like a native app.</p>
-            <a href="#features" class="cta-button">Explore Features</a>
+        <div class="marquee-container">
+            <div class="marquee">
+                <i class="fas fa-gift"></i> Nous vous souhaitons la bienvenue à notre célébration de mariage! Rendons grâce et réjouissons nous tous ensemble! <i class="fas fa-glass-cheers"></i>
+            </div>
+        </div>
+
+        <section id="home" class="content-section">
+            <div class="profile">
+				<img src="francis_fatima.png" alt="Notre photo de mariage" class="profile-img">
+                <!--<img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="My Photo" class="profile-img"> -->
+                <h1>Bienvenu!</h1>
+                <p>Merci de partager ce jour spécial avec nous. N'hésitez pas à explorer les tables d'hôtes et à télécharger vos photos!</p>
+            </div>
         </section>
 
-        <section class="features" id="features">
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>Responsive Design</h3>
-                <p>Looks great on mobile, tablet, and desktop devices with adaptive layouts.</p>
+        <section id="tables" class="table-section">
+            <h2><i class="fas fa-users"></i>  Tables d'invités</h2>
+            <p>Trouvez votre disposition de sièges ci-dessous</p>
+            
+            <div class="table-controls">
+                <input type="text" class="search-box" placeholder="Rechercher des invités ou des tables...">
+                <div class="sort-buttons">
+                    <button class="sort-btn" data-sort="name">Trier par nom</button>
+                    <button class="sort-btn" data-sort="table">Trier par table</button>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Fast Loading</h3>
-                <p>Optimized for performance with service workers for offline functionality.</p>
+            
+            <table class="guest-table">
+                <thead>
+                    <tr>
+                        <th data-sort="name">Noms des invités <i class="fas fa-sort"></i></th>
+                        <th data-sort="table">Numéro de Table <i class="fas fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="photos" class="upload-section">
+            <h2><i class="fas fa-camera"></i> Téléchargement de photos</h2>
+            <p>Partagez vos photos de notre mariage avec nous via ImgBB</p>
+            
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Faites glisser et déposez vos photos ici</h3>
+                <p>ou</p>
+                <button class="upload-btn">Sélectionner des fichiers</button>
+                <input type="file" id="fileInput" style="display: none;" multiple accept="image/*">
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔔</div>
-                <h3>Push Notifications</h3>
-                <p>Receive updates even when the app is not open in your browser.</p>
+            
+            <div class="upload-info">
+                <p><i class="fas fa-info-circle"></i> Les photos seront téléchargées sur ImgBB et disponibles pour tous les invités.</p>
             </div>
         </section>
-    </main>
 
-    <footer>
-        <p>© 2023 My PWA Site. All rights reserved.</p>
-        <button class="install-btn" id="installButton">Install App</button>
-    </footer>
+        <footer>
+            <p>© 2025 Notre célébration de mariage. Fait avec <i class="fas fa-heart" style="color: var(--primary);"></i> par Glyqe Inc. en partenariat avec Gracium Dékor</p>
+        </footer>
+    </div>
 
     <script>
+        // Data for guest table
+        const guestData = [
+		  { name: "Francis", table: "Table 1 – Alliance “N’zue Amon”" },
+		  { name: "Fatima", table: "Table 1 – Alliance “N’zue Amon”" },
+		  { name: "Max", table: "Table 1 – Alliance “N’zue Amon”" },
+		  { name: "Koikoi", table: "Table 1 – Alliance “N’zue Amon”" },
+		  { name: "Franck-Hermann D.", table: "Table 1 – Alliance “N’zue Amon”" },
+		  { name: "Marie-Josephe D.", table: "Table 1 – Alliance “N’zue Amon”" },
+		  { name: "Ailsa D.", table: "Table 1 – Alliance “N’zue Amon”" },
+		  { name: "Mr Kouamé J.", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
+		  { name: "Mr Toungara", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
+		  { name: "Mme Toungara", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
+		  { name: "Soumaila Diomandé", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
+		  { name: "Abdelmoumine T.", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
+		  { name: "Florence", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
+		  { name: "Armstrong", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
+		  { name: "Chanel", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
+		  { name: "Fatou Tounkara", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
+		  { name: "Abibatou Keita", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
+		  { name: "Jeff", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
+		  { name: "Bilal", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
+		  { name: "Franck K.", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
+		  { name: "Murielle K.", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
+		  { name: "Jean-Bedel K.", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
+		  { name: "Maman Jean-Bedel", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
+		  { name: "Abdoul S.", table: "Table 4 – Harmonie “Bôman”" },
+		  { name: "Hadja S.", table: "Table 4 – Harmonie “Bôman”" },
+		  { name: "Leslie", table: "Table 4 – Harmonie “Bôman”" },
+		  { name: "Jean-Paul", table: "Table 4 – Harmonie “Bôman”" },
+		  { name: "Chancelle", table: "Table 4 – Harmonie “Bôman”" },
+		  { name: "Ulrich", table: "Table 4 – Harmonie “Bôman”" },
+		  { name: "Ida", table: "Table 4 – Harmonie “Bôman”" },
+		  { name: "Juste", table: "Table 4 – Harmonie “Bôman”" },
+		  { name: "Paul", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Lesley", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Enfant Kouamé", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Liliane", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Marc", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Patrick", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Marie-Pascale", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Elian", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Éli", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
+		  { name: "Justin G.", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
+		  { name: "Christelle G.", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
+		  { name: "Korotoum", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
+		  { name: "Ahmed", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
+		  { name: "Cynthia", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
+		  { name: "M Dakaud", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
+		  { name: "Bichette", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
+		  { name: "Ami Bichette", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
+		  { name: "Dive", table: "Table 7 Victoire “Jaya”" },
+		  { name: "Franck", table: "Table 7 Victoire “Jaya”" },
+		  { name: "Carole W.", table: "Table 7 Victoire “Jaya”" },
+		  { name: "Patrick W.", table: "Table 7 Victoire “Jaya”" },
+		  { name: "Emma", table: "Table 7 Victoire “Jaya”" },
+		  { name: "Emerick", table: "Table 7 Victoire “Jaya”" },
+		  { name: "Claude", table: "Table 7 Victoire “Jaya”" },
+		  { name: "Mme Claude", table: "Table 7 Victoire “Jaya”" }
+		];
+
+        // DOM elements
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section, .table-section, .upload-section');
+        const tableBody = document.querySelector('.guest-table tbody');
+        const searchBox = document.querySelector('.search-box');
+        const sortButtons = document.querySelectorAll('.sort-btn');
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.querySelector('.upload-btn');
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-links');
+
+        // Initialize the page
+        function init() {
+            populateTable(guestData);
+            setupEventListeners();
+        }
+
+        // Populate the guest table
+        function populateTable(data) {
+            tableBody.innerHTML = '';
+            data.forEach(guest => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${guest.name}</td>
+                    <td>${guest.table}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.getAttribute('data-target');
+                    
+                    // Update active link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    
+                    // Show corresponding section
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === target) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Search functionality
+            searchBox.addEventListener('input', () => {
+                const searchTerm = searchBox.value.toLowerCase();
+                const filteredData = guestData.filter(guest => 
+                    guest.name.toLowerCase().includes(searchTerm) || 
+                    guest.table.toLowerCase().includes(searchTerm)
+                );
+                populateTable(filteredData);
+            });
+
+            // Sort functionality
+            sortButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const sortBy = button.getAttribute('data-sort');
+                    const sortedData = [...guestData].sort((a, b) => {
+                        if (sortBy === 'name') {
+                            return a.name.localeCompare(b.name);
+                        } else {
+                            return a.table.localeCompare(b.table);
+                        }
+                    });
+                    populateTable(sortedData);
+                });
+            });
+
+            // Table header sorting
+            document.querySelectorAll('.guest-table th').forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortBy = header.getAttribute('data-sort');
+                    const sortedData = [...guestData].sort((a, b) => {
+                        if (sortBy === 'name') {
+                            return a.name.localeCompare(b.name);
+                        } else {
+                            return a.table.localeCompare(b.table);
+                        }
+                    });
+                    populateTable(sortedData);
+                });
+            });
+
+            // Drag and drop for photo upload
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+
+            // File input button
+            uploadBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
+
+            // Mobile menu
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Handle file uploads (simulated for ImgBB)
+        const API_KEY = '926c7c7423223b3f7b16f856d77c591b';
+			
+        function handleFiles(files) {
+            if (files.length > 0) {
+                alert(`Merci de partager avec nous ${files.length} photo(s)!.`);
+                // In a real implementation, you would upload to ImgBB's API here
+            }
+        }
+
+        // Initialize the app
+        init();
+
         // Register service worker for PWA functionality
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -266,58 +615,6 @@
                 });
             });
         }
-
-        // Handle mobile navigation
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
-
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // Close mobile nav when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
-
-        // Handle install prompt
-        let deferredPrompt;
-        const installButton = document.getElementById('installButton');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent the mini-infobar from appearing on mobile
-            e.preventDefault();
-            // Stash the event so it can be triggered later
-            deferredPrompt = e;
-            // Show the install button
-            installButton.style.display = 'block';
-        });
-
-        installButton.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            
-            // Show the install prompt
-            deferredPrompt.prompt();
-            
-            // Wait for the user to respond to the prompt
-            const { outcome } = await deferredPrompt.userChoice;
-            
-            if (outcome === 'accepted') {
-                installButton.style.display = 'none';
-            }
-            
-            // Clear the saved prompt since it can't be used again
-            deferredPrompt = null;
-        });
-
-        window.addEventListener('appinstalled', () => {
-            // Hide the install button
-            installButton.style.display = 'none';
-            // Clear the deferredPrompt
-            deferredPrompt = null;
-        });
     </script>
 </body>
 </html>
