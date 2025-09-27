@@ -6,7 +6,9 @@
     <title>Mariage de Francis & Fatima</title>
     <meta name="description" content="Soyez la bienvenue à notre mariage!">
     <meta name="theme-color" content="#FF6B6B"/>
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">	
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -210,6 +212,16 @@
             color: white;
             cursor: pointer;
         }
+		
+		/* Style for odd rows */
+		.guest-table tr:nth-child(odd) {
+			background-color: #f2f2f2; /* Light grey */
+		}
+
+		/* Style for even rows */
+		.guest-table tr:nth-child(even) {
+			background-color: #ffffff; /* White */
+		}
 
         .guest-table tr:hover {
             background-color: rgba(78, 205, 196, 0.1);
@@ -352,6 +364,53 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+		/* Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .install-prompt p {
+            margin-bottom: 1rem;
+        }
+
+        .install-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .install-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .install-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .install-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+		
         /* Footer */
         footer {
             text-align: center;
@@ -404,6 +463,13 @@
 
             .upload-area {
                 padding: 1.5rem;
+            }
+			
+			.install-prompt {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
             }
         }
     </style>
@@ -493,7 +559,14 @@
                 <p><i class="fas fa-info-circle"></i> Les photos seront téléchargées et disponibles pour les mariés.</p>
             </div>
         </section>
-
+		
+		<div class="install-prompt" id="installPrompt">
+            <p>Installez cette application pour une meilleur expérience</p>
+            <div class="install-buttons">
+                <button class="install-btn install-primary" id="installButton">Installer</button>
+                <button class="install-btn install-secondary" id="dismissButton">Plus tard</button>
+            </div>
+        </div>
         <footer>
             <p>© 2025 Notre célébration de mariage. Fait avec <i class="fas fa-heart" style="color: var(--primary);"></i> par Glyqe Inc. en partenariat avec Gracium Dékor</p>
         </footer>
@@ -502,62 +575,131 @@
     <script>
         // Data for guest table
         const guestData = [
-		  { name: "Francis", table: "Table 1 – Alliance “N’zue Amon”" },
-		  { name: "Fatima", table: "Table 1 – Alliance “N’zue Amon”" },
-		  { name: "Max", table: "Table 1 – Alliance “N’zue Amon”" },
-		  { name: "Koikoi", table: "Table 1 – Alliance “N’zue Amon”" },
-		  { name: "Franck-Hermann D.", table: "Table 1 – Alliance “N’zue Amon”" },
-		  { name: "Marie-Josephe D.", table: "Table 1 – Alliance “N’zue Amon”" },
-		  { name: "Ailsa D.", table: "Table 1 – Alliance “N’zue Amon”" },
-		  { name: "Mr Kouamé J.", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
-		  { name: "Mr Toungara", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
-		  { name: "Mme Toungara", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
-		  { name: "Soumaila Diomandé", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
-		  { name: "Abdelmoumine T.", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
-		  { name: "Florence", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
-		  { name: "Armstrong", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
-		  { name: "Chanel", table: "Table 2 – Grâce Divine “Yala Jatigi”" },
-		  { name: "Fatou Tounkara", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
-		  { name: "Abibatou Keita", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
-		  { name: "Jeff", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
-		  { name: "Bilal", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
-		  { name: "Franck K.", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
-		  { name: "Murielle K.", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
-		  { name: "Jean-Bedel K.", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
-		  { name: "Maman Jean-Bedel", table: "Table 3 – Joie Éternelle “Assandjé Kplié”" },
-		  { name: "Abdoul S.", table: "Table 4 – Harmonie “Bôman”" },
-		  { name: "Hadja S.", table: "Table 4 – Harmonie “Bôman”" },
-		  { name: "Leslie", table: "Table 4 – Harmonie “Bôman”" },
-		  { name: "Jean-Paul", table: "Table 4 – Harmonie “Bôman”" },
-		  { name: "Chancelle", table: "Table 4 – Harmonie “Bôman”" },
-		  { name: "Ulrich", table: "Table 4 – Harmonie “Bôman”" },
-		  { name: "Ida", table: "Table 4 – Harmonie “Bôman”" },
-		  { name: "Juste", table: "Table 4 – Harmonie “Bôman”" },
-		  { name: "Paul", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Lesley", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Enfant Kouamé", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Liliane", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Marc", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Patrick", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Marie-Pascale", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Elian", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Éli", table: "Table 5 – Fidélité Sacrée “Amon Bla”" },
-		  { name: "Justin G.", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
-		  { name: "Christelle G.", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
-		  { name: "Korotoum", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
-		  { name: "Ahmed", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
-		  { name: "Cynthia", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
-		  { name: "M Dakaud", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
-		  { name: "Bichette", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
-		  { name: "Ami Bichette", table: "Table 6 – Abondance “Barika Kɛlɛ”" },
-		  { name: "Dive", table: "Table 7 Victoire “Jaya”" },
-		  { name: "Franck", table: "Table 7 Victoire “Jaya”" },
-		  { name: "Carole W.", table: "Table 7 Victoire “Jaya”" },
-		  { name: "Patrick W.", table: "Table 7 Victoire “Jaya”" },
-		  { name: "Emma", table: "Table 7 Victoire “Jaya”" },
-		  { name: "Emerick", table: "Table 7 Victoire “Jaya”" },
-		  { name: "Claude", table: "Table 7 Victoire “Jaya”" },
-		  { name: "Mme Claude", table: "Table 7 Victoire “Jaya”" }
+		  {"name": "Francis", "table": "Table des mariés - Amour Sacré \"N'dro Bla\""},
+		  {"name": "Fatou", "table": "Table des mariés - Amour Sacré \"N'dro Bla\""},
+		  {"name": "Franck-Hermann D.", "table": "Table 1 - Grâce Divine \"Yala Jatigi\""},
+		  {"name": "Marie-Josephe D.", "table": "Table 1 - Grâce Divine \"Yala Jatigi\""},
+		  {"name": "Paul", "table": "Table 1 - Grâce Divine \"Yala Jatigi\""},
+		  {"name": "Lesley", "table": "Table 1 - Grâce Divine \"Yala Jatigi\""},
+		  {"name": "St-Sauveur", "table": "Table 1 - Grâce Divine \"Yala Jatigi\""},
+		  {"name": "Marie-Alice", "table": "Table 1 - Grâce Divine \"Yala Jatigi\""},
+		  {"name": "Max", "table": "Table 2 - Joie Éternelle \"Assandjé Kplié\""},
+		  {"name": "Koikoi", "table": "Table 2 - Joie Éternelle \"Assandjé Kplié\""},
+		  {"name": "Idah", "table": "Table 2 - Joie Éternelle \"Assandjé Kplié\""},
+		  {"name": "Olivier", "table": "Table 2 - Joie Éternelle \"Assandjé Kplié\""},
+		  {"name": "Hadja", "table": "Table 2 - Joie Éternelle \"Assandjé Kplié\""},
+		  {"name": "Nina", "table": "Table 2 - Joie Éternelle \"Assandjé Kplié\""},
+		  {"name": "Maman Yvonne", "table": "Table 3 - Alliance \"N'zue Amon\""},
+		  {"name": "Maman Désirée", "table": "Table 3 - Alliance \"N'zue Amon\""},
+		  {"name": "Florence", "table": "Table 3 - Alliance \"N'zue Amon\""},
+		  {"name": "Armstrong", "table": "Table 3 - Alliance \"N'zue Amon\""},
+		  {"name": "Chanel", "table": "Table 3 - Alliance \"N'zue Amon\""},
+		  {"name": "Majo Konan", "table": "Table 3 - Alliance \"N'zue Amon\""},
+		  {"name": "Maman jean-Bedel", "table": "Table 3 - Alliance \"N'zue Amon\""},
+		  {"name": "Jean-Bedel", "table": "Table 3 - Alliance \"N'zue Amon\""},
+		  {"name": "Grace", "table": "Table 4 - Abondance \"Barika Kɛlɛ\""},
+		  {"name": "Karim", "table": "Table 4 - Abondance \"Barika Kɛlɛ\""},
+		  {"name": "Patrick", "table": "Table 4 - Abondance \"Barika Kɛlɛ\""},
+		  {"name": "Marie-Pascale", "table": "Table 4 - Abondance \"Barika Kɛlɛ\""},
+		  {"name": "Myriam", "table": "Table 4 - Abondance \"Barika Kɛlɛ\""},
+		  {"name": "Salomon", "table": "Table 4 - Abondance \"Barika Kɛlɛ\""},
+		  {"name": "Mireille", "table": "Table 4 - Abondance \"Barika Kɛlɛ\""},
+		  {"name": "Kevin", "table": "Table 4 - Abondance \"Barika Kɛlɛ\""},
+		  {"name": "Ida", "table": "Table 5 - Fidélité Sacrée \"Amon Bla\""},
+		  {"name": "Juste", "table": "Table 5 - Fidélité Sacrée \"Amon Bla\""},
+		  {"name": "Leslie", "table": "Table 5 - Fidélité Sacrée \"Amon Bla\""},
+		  {"name": "Nora", "table": "Table 5 - Fidélité Sacrée \"Amon Bla\""},
+		  {"name": "Fabiola", "table": "Table 5 - Fidélité Sacrée \"Amon Bla\""},
+		  {"name": "Sarah Boye", "table": "Table 5 - Fidélité Sacrée \"Amon Bla\""},
+		  {"name": "Sarah Boye 2", "table": "Table 5 - Fidélité Sacrée \"Amon Bla\""},
+		  {"name": "Ahmed", "table": "Table 6 - Victoire \"Jaya\""},
+		  {"name": "Korotoum", "table": "Table 6 - Victoire \"Jaya\""},
+		  {"name": "Christelle", "table": "Table 6 - Victoire \"Jaya\""},
+		  {"name": "Justin", "table": "Table 6 - Victoire \"Jaya\""},
+		  {"name": "Dina K.", "table": "Table 6 - Victoire \"Jaya\""},
+		  {"name": "Francis Kassala", "table": "Table 6 - Victoire \"Jaya\""},
+		  {"name": "Stephane Blé", "table": "Table 6 - Victoire \"Jaya\""},
+		  {"name": "Ella B.", "table": "Table 6 - Victoire \"Jaya\""},
+		  {"name": "Marc", "table": "Table 7 - Harmonie \"Bôman\""},
+		  {"name": "Liliane", "table": "Table 7 - Harmonie \"Bôman\""},
+		  {"name": "Audrey Renée", "table": "Table 7 - Harmonie \"Bôman\""},
+		  {"name": "Fabrice", "table": "Table 7 - Harmonie \"Bôman\""},
+		  {"name": "Rosalie", "table": "Table 7 - Harmonie \"Bôman\""},
+		  {"name": "Alain", "table": "Table 7 - Harmonie \"Bôman\""},
+		  {"name": "Guy-Marcel", "table": "Table 7 - Harmonie \"Bôman\""},
+		  {"name": "Marie-Stephanie", "table": "Table 7 - Harmonie \"Bôman\""},
+		  {"name": "Alice", "table": "Table 8 - Louange \"Amon N'dré\""},
+		  {"name": "Stephane", "table": "Table 8 - Louange \"Amon N'dré\""},
+		  {"name": "Audrey Helene", "table": "Table 8 - Louange \"Amon N'dré\""},
+		  {"name": "Junior", "table": "Table 8 - Louange \"Amon N'dré\""},
+		  {"name": "Emma", "table": "Table 8 - Louange \"Amon N'dré\""},
+		  {"name": "Emmerick", "table": "Table 8 - Louange \"Amon N'dré\""},
+		  {"name": "Clementine", "table": "Table 8 - Louange \"Amon N'dré\""},
+		  {"name": "Claude", "table": "Table 8 - Louange \"Amon N'dré\""},
+		  {"name": "Carole W", "table": "Table 9 - Espérance \"Barika Fô\""},
+		  {"name": "Patrick W", "table": "Table 9 - Espérance \"Barika Fô\""},
+		  {"name": "Franck K.", "table": "Table 9 - Espérance \"Barika Fô\""},
+		  {"name": "Murielle K.", "table": "Table 9 - Espérance \"Barika Fô\""},
+		  {"name": "Franck Mbra", "table": "Table 9 - Espérance \"Barika Fô\""},
+		  {"name": "Laety", "table": "Table 9 - Espérance \"Barika Fô\""},
+		  {"name": "Moussa", "table": "Table 9 - Espérance \"Barika Fô\""},
+		  {"name": "Rahina", "table": "Table 9 - Espérance \"Barika Fô\""},
+		  {"name": "Styves", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Sabine", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Maman Hughes", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Papa Hughes", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Hughes T.", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Vicky T.", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Ann", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Orleane", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Sandrine", "table": "Table 10 - Unité \"Dɔgɔkun\""},
+		  {"name": "Ange Roseline", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Conjoint Imelda", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Imelda", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Emmanuel", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Emmanuel conjointe", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Dive", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Franck Muteba", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Aurietta", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Bertine", "table": "Table 11 - Miséricorde \"Kpliéman Bla\""},
+		  {"name": "Brice", "table": "Table 12 - Gloire \"Yala Kɛlɛya\""},
+		  {"name": "Charlotte", "table": "Table 12 - Gloire \"Yala Kɛlɛya\""},
+		  {"name": "Gymonia", "table": "Table 12 - Gloire \"Yala Kɛlɛya\""},
+		  {"name": "Maestro André", "table": "Table 12 - Gloire \"Yala Kɛlɛya\""},
+		  {"name": "Maestro Joel", "table": "Table 12 - Gloire \"Yala Kɛlɛya\""},
+		  {"name": "Mireile", "table": "Table 12 - Gloire \"Yala Kɛlɛya\""},
+		  {"name": "Nicole", "table": "Table 12 - Gloire \"Yala Kɛlɛya\""},
+		  {"name": "Olivia", "table": "Table 12 - Gloire \"Yala Kɛlɛya\""},
+		  {"name": "Enfant Kevin", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Kevin", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Anaelle", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Cristella", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Eli", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Elian", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Ida", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Kenza", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Kiki", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Ailsa", "table": "Table  - Paix \"Hèrè\""},
+		  {"name": "Enfant Kolou", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Lopou", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Madina", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Marc-Eli", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Myla", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Nassi", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Nathan", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Malick", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Siba", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Youyou", "table": "Table 14 - Providence \"Amon Koua\""},
+		  {"name": "Enfant Maeva", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfant Maira", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfant Diomandé", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfants Wanko", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfants Wanko", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfants Wanko", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfants Wanko", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfants X", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfants X", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""},
+		  {"name": "Enfants X", "table": "Table 15 - Bénédictions Multiples \"Barika Kɛlɛya\""}
 		];
 
         // DOM elements
@@ -572,14 +714,23 @@
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-links');
 		
+		const installPrompt = document.getElementById('installPrompt');
+        const installButton = document.getElementById('installButton');
+        const dismissButton = document.getElementById('dismissButton');
+		
         const fileList = document.getElementById('fileList');
 		const uploadedImage = document.getElementById('uploadedImage');
         const imageLink = document.getElementById('imageLink');
 
+		// Variables for PWA installation
+        let deferredPrompt;
+		
         // Initialize the page
         function init() {
             populateTable(guestData);
             setupEventListeners();
+			registerServiceWorker();
+            checkPWAInstallable();
         }
 
         // Populate the guest table
@@ -687,6 +838,10 @@
             hamburger.addEventListener('click', () => {
                 navMenu.classList.toggle('active');
             });
+			
+			// Install prompt buttons
+            installButton.addEventListener('click', installPWA);
+            dismissButton.addEventListener('click', dismissInstallPrompt);
         }
 
         // Handle file uploads (simulated for ImgBB)
@@ -753,13 +908,10 @@
 				}
             }
         }
-
-        // Initialize the app
-        init();
-
-        // Register service worker for PWA functionality
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
+		
+		// Register service worker for PWA functionality
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js')
                 .then((registration) => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
@@ -767,8 +919,84 @@
                 .catch((error) => {
                     console.log('ServiceWorker registration failed: ', error);
                 });
+            }
+        }
+		
+		
+        // Check if PWA is installable
+        function checkPWAInstallable() {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                // Prevent the mini-infobar from appearing on mobile
+                e.preventDefault();
+                // Stash the event so it can be triggered later
+                deferredPrompt = e;
+                // Show the install prompt
+                showInstallPrompt();
+            });
+
+            window.addEventListener('appinstalled', () => {
+                // Hide the install button
+                installPrompt.style.display = 'none';
+                // Clear the deferredPrompt
+                deferredPrompt = null;
             });
         }
+
+        // Show install prompt
+        function showInstallPrompt() {
+            // Only show if not already installed and not recently dismissed
+            if (deferredPrompt && !getInstallDismissed()) {
+                installPrompt.style.display = 'block';
+            }
+        }
+
+        // Dismiss install prompt
+        function dismissInstallPrompt() {
+            installPrompt.style.display = 'none';
+            // Remember dismissal for a week
+            setInstallDismissed();
+        }
+
+        // Install PWA
+        function installPWA() {
+            if (!deferredPrompt) return;
+            
+            // Show the install prompt
+            deferredPrompt.prompt();
+            
+            // Wait for the user to respond to the prompt
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+                // Clear the saved prompt since it can't be used again
+                deferredPrompt = null;
+                installPrompt.style.display = 'none';
+            });
+        }
+
+        // Check if install prompt was recently dismissed
+        function getInstallDismissed() {
+            const dismissed = localStorage.getItem('installDismissed');
+            if (!dismissed) return false;
+            
+            // Check if it was dismissed more than a week ago
+            const dismissedDate = new Date(parseInt(dismissed));
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            
+            return dismissedDate > weekAgo;
+        }
+
+        // Set install prompt as dismissed
+        function setInstallDismissed() {
+            localStorage.setItem('installDismissed', Date.now().toString());
+        }
+		
+        // Initialize the app
+        init();
     </script>
 </body>
 </html>
